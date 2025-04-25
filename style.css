@@ -1,0 +1,79 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  color: white;
+}
+
+body {
+  height: 100vh;
+}
+section {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+.calculadora {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  margin: auto;
+
+  width: clamp(500px, 50%, 600px);
+  height: 70vh;
+  padding: 5px;
+  background-color: #1e1e1e;
+}
+.teclas {
+  display: grid;
+  width: 100%;
+  flex: 1;
+  gap: 4px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+}
+.teclas button {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  border: none;
+  cursor: pointer;
+}
+.teclas .numeros {
+  background-color: #3b3b3b;
+}
+.teclas .numeros:hover {
+  background-color: #323232;
+}
+.teclas .operadores {
+  background-color: #323232;
+}
+.teclas .operadores:hover {
+  background-color: #3b3b3b;
+}
+.teclas .operadores:active,
+.teclas .numeros:active {
+  background-color: #282828;
+}
+#igual {
+  background-color: #76b9ed;
+  color: black;
+}
+.display {
+  width: 100%;
+  height: 7em;
+}
+.display #input-display {
+  color: black;
+  text-align: end;
+  font-size: 60px;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: calc(100% - 10px);
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  color: white;
+}
