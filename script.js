@@ -1,8 +1,8 @@
 const operadores = document.getElementsByClassName("operadores");
 const numeros = document.getElementsByClassName("numeros");
 const btnIgual = document.getElementById("igual");
-let upperDisplay = document.getElementById("upper-display")
-const inputDisplay = document.getElementById("input-display")
+let upperDisplay = document.getElementById("upper-display");
+const inputDisplay = document.getElementById("input-display");
 // adicionando eventos a todos os botoes
 Array.from(operadores).forEach((valor, index) => {
   valor.addEventListener("click", () => {
@@ -17,54 +17,65 @@ Array.from(numeros).forEach((valor) => {
 
 //
 let arlClick = false;
-let seila = false
-let jaOperou = false
+let zerar = false;
+let jaOperou = false;
 let ultimoOperador = null;
 let op = null;
 function clickOperadores(operador) {
-  
-  // deleta
-  if (operador == "DEL") {
-    console.log(document.getElementById("input-display").value);
-    document.getElementById("input-display").value = document.getElementById("input-display").value.slice(0, -1);
-    upperDisplay.textContent = ""
-  }
-  // zera
-  if(operador == "C"){
-    arlClick = false;
-    ultimoOperador = null;
-    op = null;
-    document.getElementById("input-display").value = ""
-    upperDisplay.textContent = ""
+  switch (operador) {
+    case "DEL":
+      console.log(inputDisplay.value);
+      inputDisplay.value = inputDisplay.value.slice(0, -1);
+      upperDisplay.textContent = "";
+      break;
 
-  }
-
-  if (document.getElementById("input-display").value != "" && operador == "+") {
-    op = parseInt(document.getElementById("input-display").value);
-    upperDisplay.textContent = document.getElementById("input-display").value + " " +operador
-    arlClick = true;
-    ultimoOperador = operador;
-  }
-
-  //
-  if (operador == "=" && arlClick == true && document.getElementById("input-display").value!="") {
-    if ((ultimoOperador == "+")) {
-      upperDisplay.textContent = op+" "+ultimoOperador+" "+document.getElementById("input-display").value
-      document.getElementById("input-display").value = op + parseInt(document.getElementById("input-display").value);
+    case "C":
       arlClick = false;
-      jaOperou = true
-      ultimoOperador = operador;
-    }
+      ultimoOperador = null;
+      op = null;
+      inputDisplay.value = "";
+      upperDisplay.textContent = "";
+      break;
+
+    case "+":
+      if (inputDisplay.value !== "") {
+        op = parseInt(inputDisplay.value);
+        upperDisplay.textContent = inputDisplay.value + " " + operador;
+        arlClick = true;
+        zerar = true;
+        ultimoOperador = operador;
+      }
+      // adiconar pra somar aqui mesmo se arlclick = true
+      break;
+
+    case "=":
+      if (arlClick === true && inputDisplay.value !== "") {
+        if (ultimoOperador === "+") {
+          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value + " = ";
+          inputDisplay.value = op + parseInt(inputDisplay.value);
+          arlClick = false;
+          jaOperou = true;
+          ultimoOperador = operador;
+        }
+      }
+      break;
+
+    default:
+      // Se quiser tratar outros operadores depois
+      break;
   }
 }
+
 function clickNumeros(numero) {
-  
-  if(jaOperou == true){
-    upperDisplay.textContent=""
-    document.getElementById("input-display").value = ""
-    jaOperou = false
-    
+  if (jaOperou == true) {
+    upperDisplay.textContent = "";
+    inputDisplay.value = "";
+    jaOperou = false;
   }
-  document.getElementById("input-display").value += numero;
-  
+  if (zerar == true) {
+    inputDisplay.value = "";
+
+    zerar = false;
+  }
+  inputDisplay.value += numero;
 }
