@@ -19,10 +19,13 @@ Array.from(numeros).forEach((valor) => {
 let arlClick = false;
 let zerar = false;
 let jaOperou = false;
+let operadorUnico = false;
 let ultimoOperador = null;
 let op = null;
 function clickOperadores(operador) {
   switch (operador) {
+    case "CE":
+      inputDisplay.value = "";
     case "DEL":
       console.log(inputDisplay.value);
       inputDisplay.value = inputDisplay.value.slice(0, -1);
@@ -38,44 +41,59 @@ function clickOperadores(operador) {
       break;
 
     case "+":
-      if (inputDisplay.value !== "") {
-        op = parseInt(inputDisplay.value);
+      if (inputDisplay.value !== "" && arlClick == false) {
+        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
         upperDisplay.textContent = inputDisplay.value + " " + operador;
         arlClick = true;
         zerar = true;
+        jaOperou = false;
         ultimoOperador = operador;
+      } else if (inputDisplay.value !== "" && arlClick == true) {
+        console.log(parseFloat(inputDisplay.value.replace(/\D/g, ".")));
+
+        inputDisplay.value = op + parseFloat(inputDisplay.value.replace(/\D/g, "."));
+        upperDisplay.textContent = inputDisplay.value.replace(/\D/g, ".") + " " + operador;
+        jaOperou = false;
+        operadorUnico = true;
+        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
       }
-      // adiconar pra somar aqui mesmo se arlclick = true
+
       break;
 
     case "=":
       if (arlClick === true && inputDisplay.value !== "") {
         if (ultimoOperador === "+") {
-          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value + " = ";
-          inputDisplay.value = op + parseInt(inputDisplay.value);
+          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value.replace(/\D/g, ".") + " = ";
+          inputDisplay.value = op + parseFloat(inputDisplay.value.replace(/\D/g, "."));
           arlClick = false;
           jaOperou = true;
           ultimoOperador = operador;
         }
       }
       break;
-
-    default:
-      // Se quiser tratar outros operadores depois
-      break;
+    case "X":
   }
 }
 
 function clickNumeros(numero) {
-  if (jaOperou == true) {
+  if (jaOperou && !operadorUnico) {
     upperDisplay.textContent = "";
     inputDisplay.value = "";
     jaOperou = false;
   }
-  if (zerar == true) {
+  if (zerar) {
     inputDisplay.value = "";
-
     zerar = false;
   }
+  if (operadorUnico) {
+    inputDisplay.value = "";
+    operadorUnico = false;
+  }
+
   inputDisplay.value += numero;
 }
+// teste
+let texto = "35,0543";
+let numero = parseFloat(texto.replace(/\D/g, "."));
+
+console.log(numero);
