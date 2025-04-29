@@ -29,9 +29,8 @@ function clickOperadores(operador) {
     case "DEL":
       console.log(inputDisplay.value);
       inputDisplay.value = inputDisplay.value.slice(0, -1);
-      upperDisplay.textContent = "";
+      
       break;
-
     case "C":
       arlClick = false;
       ultimoOperador = null;
@@ -49,10 +48,12 @@ function clickOperadores(operador) {
         jaOperou = false;
         ultimoOperador = operador;
       } else if (inputDisplay.value !== "" && arlClick == true) {
-        console.log(parseFloat(inputDisplay.value.replace(/\D/g, ".")));
 
         inputDisplay.value = op + parseFloat(inputDisplay.value.replace(/\D/g, "."));
-        upperDisplay.textContent = inputDisplay.value.replace(/\D/g, ".") + " " + operador;
+        inputDisplay.value = inputDisplay.value.replace(/\D/g, ",")
+
+        
+        upperDisplay.textContent = inputDisplay.value + " " + operador;
         jaOperou = false;
         operadorUnico = true;
         op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
@@ -60,18 +61,45 @@ function clickOperadores(operador) {
 
       break;
 
+    case "×":
+      if (inputDisplay.value !== "" && arlClick == false) {
+        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
+        upperDisplay.textContent = inputDisplay.value + " " + operador;
+        arlClick = true;
+        zerar = true;
+        jaOperou = false;
+        ultimoOperador = operador;
+      } else if (inputDisplay.value !== "" && arlClick == true) {
+        console.log(parseFloat(inputDisplay.value.replace(/\D/g, ".")));
+
+        inputDisplay.value = op * parseFloat(inputDisplay.value.replace(/\D/g, "."));
+        inputDisplay.value = inputDisplay.value.replace(/\D/g, ",")
+
+        upperDisplay.textContent = inputDisplay.value + " " + operador;
+        jaOperou = false;
+        operadorUnico = true;
+        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
+      }
+      break;
     case "=":
       if (arlClick === true && inputDisplay.value !== "") {
         if (ultimoOperador === "+") {
-          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value.replace(/\D/g, ".") + " = ";
+          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value + " = ";
           inputDisplay.value = op + parseFloat(inputDisplay.value.replace(/\D/g, "."));
+          arlClick = false;
+          jaOperou = true;
+          ultimoOperador = operador;
+        }
+        if (ultimoOperador === "×") {
+          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value + " = ";
+          inputDisplay.value = op * parseFloat(inputDisplay.value.replace(/\D/g, "."));
+          inputDisplay.value = inputDisplay.value.replace(/\D/g, ",")
           arlClick = false;
           jaOperou = true;
           ultimoOperador = operador;
         }
       }
       break;
-    case "X":
   }
 }
 
@@ -92,8 +120,3 @@ function clickNumeros(numero) {
 
   inputDisplay.value += numero;
 }
-// teste
-let texto = "35,0543";
-let numero = parseFloat(texto.replace(/\D/g, "."));
-
-console.log(numero);
