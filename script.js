@@ -120,3 +120,4 @@ function clickNumeros(numero) {
 
   inputDisplay.value += numero;
 }
+// adicionar outros operadores / aprender a otimizar o codigo
