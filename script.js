@@ -3,6 +3,7 @@ const numeros = document.getElementsByClassName("numeros");
 const btnIgual = document.getElementById("igual");
 let upperDisplay = document.getElementById("upper-display");
 const inputDisplay = document.getElementById("input-display");
+
 // adicionando eventos a todos os botoes
 Array.from(operadores).forEach((valor, index) => {
   valor.addEventListener("click", () => {
@@ -15,110 +16,46 @@ Array.from(numeros).forEach((valor) => {
   });
 });
 
-//
-let arlClick = false;
-let zerar = false;
+// declarando as variaveis para a calc
+let clickOperador = false;
 let jaOperou = false;
-let operadorUnico = false;
-let ultimoOperador = null;
-let op = null;
+let ultimoNumero = null;
+
+//
+function valorInputFloat() {
+  return parseFloat(inputDisplay.value.replace(",", "."));
+}
+function operar(op, a, b) {
+  switch (op) {
+    case "+":
+      return a + b;
+    case "×":
+      return a * b;
+  }
+}
+
 function clickOperadores(operador) {
   switch (operador) {
-    case "CE":
-      inputDisplay.value = "";
-      break;
-    case "DEL":
-      console.log(inputDisplay.value);
-      inputDisplay.value = inputDisplay.value.slice(0, -1);
-      
-      break;
-    case "C":
-      arlClick = false;
-      ultimoOperador = null;
-      op = null;
-      inputDisplay.value = "";
-      upperDisplay.textContent = "";
-      break;
-
     case "+":
-      if (inputDisplay.value !== "" && arlClick == false) {
-        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
+      if (inputDisplay.value && !clickOperador && !jaOperou) {
         upperDisplay.textContent = inputDisplay.value + " " + operador;
-        arlClick = true;
-        zerar = true;
-        jaOperou = false;
-        ultimoOperador = operador;
-      } else if (inputDisplay.value !== "" && arlClick == true) {
-
-        inputDisplay.value = op + parseFloat(inputDisplay.value.replace(/\D/g, "."));
-        inputDisplay.value = inputDisplay.value.replace(/\D/g, ",")
-
-        
+        ultimoNumero = valorInputFloat();
+        clickOperador = true;
+        jaOperou = true;
+      } else if (inputDisplay.value && jaOperou) {
+        inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
         upperDisplay.textContent = inputDisplay.value + " " + operador;
+        ultimoNumero = valorInputFloat();
+        clickOperador = true;
         jaOperou = false;
-        operadorUnico = true;
-        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
-      }
-
-      break;
-
-    case "×":
-      if (inputDisplay.value !== "" && arlClick == false) {
-        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
-        upperDisplay.textContent = inputDisplay.value + " " + operador;
-        arlClick = true;
-        zerar = true;
-        jaOperou = false;
-        ultimoOperador = operador;
-      } else if (inputDisplay.value !== "" && arlClick == true) {
-        console.log(parseFloat(inputDisplay.value.replace(/\D/g, ".")));
-
-        inputDisplay.value = op * parseFloat(inputDisplay.value.replace(/\D/g, "."));
-        inputDisplay.value = inputDisplay.value.replace(/\D/g, ",")
-
-        upperDisplay.textContent = inputDisplay.value + " " + operador;
-        jaOperou = false;
-        operadorUnico = true;
-        op = parseFloat(inputDisplay.value.replace(/\D/g, "."));
-      }
-      break;
-    case "=":
-      if (arlClick === true && inputDisplay.value !== "") {
-        if (ultimoOperador === "+") {
-          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value + " = ";
-          inputDisplay.value = op + parseFloat(inputDisplay.value.replace(/\D/g, "."));
-          arlClick = false;
-          jaOperou = true;
-          ultimoOperador = operador;
-        }
-        if (ultimoOperador === "×") {
-          upperDisplay.textContent = op + " " + ultimoOperador + " " + inputDisplay.value + " = ";
-          inputDisplay.value = op * parseFloat(inputDisplay.value.replace(/\D/g, "."));
-          inputDisplay.value = inputDisplay.value.replace(/\D/g, ",")
-          arlClick = false;
-          jaOperou = true;
-          ultimoOperador = operador;
-        }
-      }
-      break;
+      } // NAO FUNCIONA ESSA BOSTA
   }
 }
-
 function clickNumeros(numero) {
-  if (jaOperou && !operadorUnico) {
-    upperDisplay.textContent = "";
+  if (clickOperador) {
     inputDisplay.value = "";
-    jaOperou = false;
+    clickOperador = false;
   }
-  if (zerar) {
-    inputDisplay.value = "";
-    zerar = false;
-  }
-  if (operadorUnico) {
-    inputDisplay.value = "";
-    operadorUnico = false;
-  }
-
   inputDisplay.value += numero;
+  // parseFloat(inputDisplay.value.replace(/\D/g, ".")) += numero
 }
-// adicionar outros operadores / aprender a otimizar o codigo
