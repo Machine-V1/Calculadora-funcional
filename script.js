@@ -26,6 +26,7 @@ function clickOperadores(operador) {
   switch (operador) {
     case "CE":
       inputDisplay.value = "";
+      break;
     case "DEL":
       console.log(inputDisplay.value);
       inputDisplay.value = inputDisplay.value.slice(0, -1);
