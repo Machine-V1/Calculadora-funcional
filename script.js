@@ -19,11 +19,16 @@ Array.from(numeros).forEach((valor) => {
 // declarando as variaveis para a calc
 let clickOperador = false;
 let jaOperou = false;
+let operouIgual = false;
 let ultimoNumero = null;
+let ultimoOperador = null;
 
 //
 function valorInputFloat() {
   return parseFloat(inputDisplay.value.replace(",", "."));
+}
+function toDisplay() {
+  return inputDisplay.value.replace(".", ",");
 }
 function operar(op, a, b) {
   switch (op) {
@@ -37,18 +42,36 @@ function operar(op, a, b) {
 function clickOperadores(operador) {
   switch (operador) {
     case "+":
-      if (inputDisplay.value && !clickOperador && !jaOperou) {
-        upperDisplay.textContent = inputDisplay.value + " " + operador;
-        ultimoNumero = valorInputFloat();
-        clickOperador = true;
-        jaOperou = true;
-      } else if (inputDisplay.value && jaOperou) {
+      ultimoOperador = operador;
+      if (inputDisplay.value && jaOperou) {
         inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
         upperDisplay.textContent = inputDisplay.value + " " + operador;
         ultimoNumero = valorInputFloat();
-        clickOperador = true;
+        clickOperador = false;
         jaOperou = false;
-      } // NAO FUNCIONA ESSA BOSTA
+      }
+      break;
+    case "×":
+      ultimoOperador = operador;
+
+      if (inputDisplay.value && jaOperou) {
+        inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
+        upperDisplay.textContent = inputDisplay.value + " " + operador;
+        ultimoNumero = valorInputFloat();
+        clickOperador = false;
+        jaOperou = false;
+      }
+      break;
+    case "=":
+      switch (ultimoOperador) {
+        case "+":
+          upperDisplay.textContent = ultimoNumero + " + " + inputDisplay.value + " =";
+          inputDisplay.value = operar(ultimoOperador, ultimoNumero, valorInputFloat());
+          operouIgual = true;
+          clickOperador = false;
+          jaOperou = false;
+      }
+      break;
   }
 }
 function clickNumeros(numero) {
@@ -56,6 +79,19 @@ function clickNumeros(numero) {
     inputDisplay.value = "";
     clickOperador = false;
   }
+  if (!jaOperou) {
+    inputDisplay.value = "";
+    jaOperou = true;
+  }
+  if (clickOperador && !jaOperou) {
+    inputDisplay.value = "";
+  }
+  if (operouIgual) {
+    upperDisplay.textContent = "";
+    operouIgual = false;
+    ultimoOperador = null;
+    ultimoNumero = null;
+  }
+
   inputDisplay.value += numero;
-  // parseFloat(inputDisplay.value.replace(/\D/g, ".")) += numero
 }
