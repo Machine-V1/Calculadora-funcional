@@ -17,7 +17,7 @@ Array.from(numeros).forEach((valor) => {
 });
 
 // declarando as variaveis para a calc
-let clickOperador = false;
+
 let jaOperou = false;
 let operouIgual = false;
 let ultimoNumero = null;
@@ -47,7 +47,6 @@ function clickOperadores(operador) {
         inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
         upperDisplay.textContent = inputDisplay.value + " " + operador;
         ultimoNumero = valorInputFloat();
-        clickOperador = false;
         jaOperou = false;
       }
       break;
@@ -58,7 +57,6 @@ function clickOperadores(operador) {
         inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
         upperDisplay.textContent = inputDisplay.value + " " + operador;
         ultimoNumero = valorInputFloat();
-        clickOperador = false;
         jaOperou = false;
       }
       break;
@@ -68,22 +66,18 @@ function clickOperadores(operador) {
           upperDisplay.textContent = ultimoNumero + " + " + inputDisplay.value + " =";
           inputDisplay.value = operar(ultimoOperador, ultimoNumero, valorInputFloat());
           operouIgual = true;
-          clickOperador = false;
           jaOperou = false;
       }
       break;
   }
 }
 function clickNumeros(numero) {
-  if (clickOperador) {
-    inputDisplay.value = "";
-    clickOperador = false;
-  }
+  
   if (!jaOperou) {
     inputDisplay.value = "";
     jaOperou = true;
   }
-  if (clickOperador && !jaOperou) {
+  if (!jaOperou) {
     inputDisplay.value = "";
   }
   if (operouIgual) {
