@@ -52,11 +52,11 @@ function clickOperadores(operador) {
       break;
     case "×":
       ultimoOperador = operador;
-
+      // problema aqui na ordem
       if (inputDisplay.value && jaOperou) {
+        ultimoNumero = valorInputFloat();
         inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
         upperDisplay.textContent = inputDisplay.value + " " + operador;
-        ultimoNumero = valorInputFloat();
         jaOperou = false;
       }
       break;
