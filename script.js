@@ -23,8 +23,8 @@ Array.from(apagadores).forEach((valor) => {
 });
 // declarando as variaveis para a calc
 
-// Map de true e false com chaves tipo + - x 1/x
-// logica 1 - Armazenar 2- calcular
+// Adicionar um array de event so pra operadores avancados potenciao etc
+// e armazenar esse valor e mostrar no display
 let ultimoNumero = null;
 let ultimoOperador = null;
 let clickOperador = false;
@@ -47,12 +47,11 @@ function operar(op, a, b) {
       return a - b;
     case "÷":
       return a / b;
-      // vou me fuder pra fazer potenciacao e raiz quadrada
+    
   }
 }
 
 function clickOperadores(operador) {
-  console.log(clickOperador);
   if (operador == "=" && ultimoNumero) {
     upperDisplay.textContent =
       ultimoNumero + " " + ultimoOperador + " " + inputDisplay.value + " =";
@@ -105,6 +104,7 @@ function clickOperadores(operador) {
   }
 }
 let initial = false;
+
 function clickNumeros(numero) {
   if (!initial) {
     inputDisplay.value = "";
