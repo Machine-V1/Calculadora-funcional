@@ -29,54 +29,84 @@ let ultimoNumero = null;
 let ultimoOperador = null;
 let clickOperador = false;
 let zerarDisplay = false;
+let operouIgual = false;
 //
 function valorInputFloat() {
   return parseFloat(inputDisplay.value.replace(",", "."));
 }
-
+function valorToDisplay() {
+  return inputDisplay.value.replace(".", ",");
+}
 function operar(op, a, b) {
   switch (op) {
     case "+":
       return a + b;
     case "×":
       return a * b;
+    case "-":
+      return a - b;
+    case "÷":
+      return a / b;
+      // vou me fuder pra fazer potenciacao e raiz quadrada
   }
-}
-function operarCasoIgual() {
-  upperDisplay.textContent = ultimoNumero + " + " + inputDisplay.value + " =";
-  toDisplay();
 }
 
 function clickOperadores(operador) {
+  console.log(clickOperador);
   if (operador == "=" && ultimoNumero) {
-    console.log("ingual");
-  } else if (clickOperador && operador == ultimoOperador) {
-    inputDisplay.value = operar(operador, valorInputFloat(), ultimoNumero);
-    upperDisplay.textContent = inputDisplay.value + " " + operador;
-    zerarDisplay = true;
-    clickOperador = false;
-  } else if (ultimoOperador != operador && clickOperador) {
+    upperDisplay.textContent =
+      ultimoNumero + " " + ultimoOperador + " " + inputDisplay.value + " =";
+    upperDisplay.textContent.replace(".", ",");
     inputDisplay.value = operar(
       ultimoOperador,
       valorInputFloat(),
       ultimoNumero
     );
+    inputDisplay.value = valorToDisplay();
+    clickOperador = false;
+    operouIgual = true;
+  } else if (clickOperador && operador == ultimoOperador) {
+    inputDisplay.value = operar(operador, valorInputFloat(), ultimoNumero);
+    inputDisplay.value = valorToDisplay();
+    upperDisplay.textContent = inputDisplay.value + " " + operador;
+    upperDisplay.textContent.replace(".", ",");
     zerarDisplay = true;
     clickOperador = false;
+    operouIgual = false;
+  } else if (
+    ultimoOperador != operador &&
+    clickOperador &&
+    ultimoOperador != null
+  ) {
+    inputDisplay.value = operar(
+      ultimoOperador,
+      valorInputFloat(),
+      ultimoNumero
+    );
+    inputDisplay.value = valorToDisplay();
+    zerarDisplay = true;
+    clickOperador = false;
+    operouIgual = false;
   } else if (!clickOperador) {
     zerarDisplay = true;
+    operouIgual = false;
   } else {
     ultimoOperador = operador;
     upperDisplay.textContent = inputDisplay.value + " " + operador;
+    upperDisplay.textContent.replace(".", ",");
+    operouIgual = false;
     zerarDisplay = true;
   }
-  upperDisplay.textContent = inputDisplay.value + " " + operador;
-  ultimoNumero = parseFloat(inputDisplay.value.replace(",", "."));
-  ultimoOperador = operador;
+  if (operador != "=") {
+    upperDisplay.textContent = inputDisplay.value + " " + operador;
+    upperDisplay.textContent.replace(".", ",");
+    ultimoNumero = parseFloat(inputDisplay.value.replace(",", "."));
+    ultimoOperador = operador;
+  }
 }
 let initial = false;
 function clickNumeros(numero) {
-  if (inputDisplay.value == "0" && !initial) {
+  if (!initial) {
     inputDisplay.value = "";
     inputDisplay.value += numero;
     initial = true;
@@ -85,6 +115,13 @@ function clickNumeros(numero) {
     inputDisplay.value += numero;
     clickOperador = true;
     zerarDisplay = false;
+  } else if (operouIgual) {
+    inputDisplay.value = "";
+    ultimoNumero = null;
+    ultimoOperador = null;
+    operouIgual = false;
+    inputDisplay.value += numero;
+    upperDisplay.textContent = "";
   } else {
     inputDisplay.value += numero;
   }
@@ -92,14 +129,17 @@ function clickNumeros(numero) {
 function clickApagadores(apagador) {
   switch (apagador) {
     case "C":
-      inputDisplay.value = "";
+      inputDisplay.value = "0";
       upperDisplay.textContent = "";
       clickOperador = false;
       zerarDisplay = false;
+      operouIgual = false;
+      initial = false;
       break;
 
     case "CE":
-      inputDisplay.value = "0";
+      inputDisplay.value = "";
+
       break;
     case "DEL":
       inputDisplay.value = inputDisplay.value.slice(0, -1);
