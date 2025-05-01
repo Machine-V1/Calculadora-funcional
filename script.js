@@ -1,9 +1,10 @@
 const operadores = document.getElementsByClassName("operadores");
 const numeros = document.getElementsByClassName("numeros");
+const apagadores = document.getElementsByClassName("apagadores");
 const btnIgual = document.getElementById("igual");
 let upperDisplay = document.getElementById("upper-display");
 const inputDisplay = document.getElementById("input-display");
-
+inputDisplay.value = 0;
 // adicionando eventos a todos os botoes
 Array.from(operadores).forEach((valor, index) => {
   valor.addEventListener("click", () => {
@@ -15,21 +16,24 @@ Array.from(numeros).forEach((valor) => {
     clickNumeros(valor.textContent);
   });
 });
-
+Array.from(apagadores).forEach((valor) => {
+  valor.addEventListener("click", () => {
+    clickApagadores(valor.textContent);
+  });
+});
 // declarando as variaveis para a calc
 
-let jaOperou = false;
-let operouIgual = false;
+// Map de true e false com chaves tipo + - x 1/x
+// logica 1 - Armazenar 2- calcular
 let ultimoNumero = null;
 let ultimoOperador = null;
-
+let clickOperador = false;
+let zerarDisplay = false;
 //
 function valorInputFloat() {
   return parseFloat(inputDisplay.value.replace(",", "."));
 }
-function toDisplay() {
-  return inputDisplay.value.replace(".", ",");
-}
+
 function operar(op, a, b) {
   switch (op) {
     case "+":
@@ -38,54 +42,66 @@ function operar(op, a, b) {
       return a * b;
   }
 }
+function operarCasoIgual() {
+  upperDisplay.textContent = ultimoNumero + " + " + inputDisplay.value + " =";
+  toDisplay();
+}
 
 function clickOperadores(operador) {
-  switch (operador) {
-    case "+":
-      ultimoOperador = operador;
-      if (inputDisplay.value && jaOperou) {
-        inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
-        upperDisplay.textContent = inputDisplay.value + " " + operador;
-        ultimoNumero = valorInputFloat();
-        jaOperou = false;
-      }
-      break;
-    case "×":
-      ultimoOperador = operador;
-      // problema aqui na ordem
-      if (inputDisplay.value && jaOperou) {
-        ultimoNumero = valorInputFloat();
-        inputDisplay.value = operar(operador, ultimoNumero, valorInputFloat());
-        upperDisplay.textContent = inputDisplay.value + " " + operador;
-        jaOperou = false;
-      }
-      break;
-    case "=":
-      switch (ultimoOperador) {
-        case "+":
-          upperDisplay.textContent = ultimoNumero + " + " + inputDisplay.value + " =";
-          inputDisplay.value = operar(ultimoOperador, ultimoNumero, valorInputFloat());
-          operouIgual = true;
-          jaOperou = false;
-      }
-      break;
+  if (operador == "=" && ultimoNumero) {
+    console.log("ingual");
+  } else if (clickOperador && operador == ultimoOperador) {
+    inputDisplay.value = operar(operador, valorInputFloat(), ultimoNumero);
+    upperDisplay.textContent = inputDisplay.value + " " + operador;
+    zerarDisplay = true;
+    clickOperador = false;
+  } else if (ultimoOperador != operador && clickOperador) {
+    inputDisplay.value = operar(
+      ultimoOperador,
+      valorInputFloat(),
+      ultimoNumero
+    );
+    zerarDisplay = true;
+    clickOperador = false;
+  } else if (!clickOperador) {
+    zerarDisplay = true;
+  } else {
+    ultimoOperador = operador;
+    upperDisplay.textContent = inputDisplay.value + " " + operador;
+    zerarDisplay = true;
+  }
+  upperDisplay.textContent = inputDisplay.value + " " + operador;
+  ultimoNumero = parseFloat(inputDisplay.value.replace(",", "."));
+  ultimoOperador = operador;
+}
+let initial = false;
+function clickNumeros(numero) {
+  if (inputDisplay.value == "0" && !initial) {
+    inputDisplay.value = "";
+    inputDisplay.value += numero;
+    initial = true;
+  } else if (zerarDisplay) {
+    inputDisplay.value = "";
+    inputDisplay.value += numero;
+    clickOperador = true;
+    zerarDisplay = false;
+  } else {
+    inputDisplay.value += numero;
   }
 }
-function clickNumeros(numero) {
-  
-  if (!jaOperou) {
-    inputDisplay.value = "";
-    jaOperou = true;
-  }
-  if (!jaOperou) {
-    inputDisplay.value = "";
-  }
-  if (operouIgual) {
-    upperDisplay.textContent = "";
-    operouIgual = false;
-    ultimoOperador = null;
-    ultimoNumero = null;
-  }
+function clickApagadores(apagador) {
+  switch (apagador) {
+    case "C":
+      inputDisplay.value = "";
+      upperDisplay.textContent = "";
+      clickOperador = false;
+      zerarDisplay = false;
+      break;
 
-  inputDisplay.value += numero;
+    case "CE":
+      inputDisplay.value = "0";
+      break;
+    case "DEL":
+      inputDisplay.value = inputDisplay.value.slice(0, -1);
+  }
 }
