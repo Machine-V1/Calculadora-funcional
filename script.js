@@ -80,7 +80,7 @@ function clickOperadores(operador) {
   if (operador == "=" && ultimoNumero) {
     upperDisplay.textContent =
       ultimoNumero + " " + ultimoOperador + " " + inputDisplay.value + " =";
-    upperDisplay.textContent.replace(".", ",");
+    upperDisplay.textContent = upperDisplay.textContent.replace(".", ",");
     inputDisplay.value = operar(
       ultimoOperador,
       valorInputFloat(),
@@ -95,7 +95,7 @@ function clickOperadores(operador) {
 
     inputDisplay.value = valorToDisplay();
     upperDisplay.textContent = inputDisplay.value + " " + operador;
-    upperDisplay.textContent.replace(".", ",");
+    upperDisplay.textContent = upperDisplay.textContent.replace(".", ",");
     zerarDisplay = true;
     clickOperador = false;
     operouIgual = false;
@@ -124,13 +124,13 @@ function clickOperadores(operador) {
   } else {
     ultimoOperador = operador;
     upperDisplay.textContent = inputDisplay.value + " " + operador;
-    upperDisplay.textContent.replace(".", ",");
+    upperDisplay.textContent = upperDisplay.textContent.replace(".", ",");
     operouIgual = false;
     zerarDisplay = true;
   }
   if (operador != "=") {
     upperDisplay.textContent = inputDisplay.value + " " + operador;
-    upperDisplay.textContent.replace(".", ",");
+    upperDisplay.textContent = upperDisplay.textContent.replace(".", ",");
     ultimoNumero = parseFloat(inputDisplay.value.replace(",", "."));
     ultimoOperador = operador;
   }
@@ -182,7 +182,7 @@ function clickApagadores(apagador) {
   }
 }
 function clickOperadoresAvancados(operadorAvancado) {
-  // % 1/x x² √x
+  // TASK: Modular esse codigo abaixo
 
   switch (operadorAvancado) {
     case "%":
