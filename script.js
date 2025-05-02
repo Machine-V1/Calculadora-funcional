@@ -1,6 +1,9 @@
 const operadores = document.getElementsByClassName("operadores");
 const numeros = document.getElementsByClassName("numeros");
 const apagadores = document.getElementsByClassName("apagadores");
+const operadoresAvancados = document.getElementsByClassName(
+  "operadores-avancado"
+);
 const btnIgual = document.getElementById("igual");
 let upperDisplay = document.getElementById("upper-display");
 const inputDisplay = document.getElementById("input-display");
@@ -21,16 +24,26 @@ Array.from(apagadores).forEach((valor) => {
     clickApagadores(valor.textContent);
   });
 });
+Array.from(operadoresAvancados).forEach((valor) => {
+  valor.addEventListener("click", () => {
+    clickOperadoresAvancados(valor.textContent);
+  });
+});
 // declarando as variaveis para a calc
 
 // Adicionar um array de event so pra operadores avancados potenciao etc
 // e armazenar esse valor e mostrar no display
 let ultimoNumero = null;
 let ultimoOperador = null;
+let numeroParaInversao = null;
+let globalOperador = ""
 let clickOperador = false;
 let zerarDisplay = false;
 let operouIgual = false;
+let porcentagem = false;
+
 //
+
 function valorInputFloat() {
   return parseFloat(inputDisplay.value.replace(",", "."));
 }
@@ -44,14 +57,20 @@ function operar(op, a, b) {
     case "×":
       return a * b;
     case "-":
-      return a - b;
+      return b - a;
     case "÷":
-      return a / b;
-    
+      return b / a;
+    case "%":
+      return (a * b) / 100;
+    case "1/x":
+      return 1/a
+    case "x²":
+      return a**2
   }
 }
 
 function clickOperadores(operador) {
+  console.log(operador)
   if (operador == "=" && ultimoNumero) {
     upperDisplay.textContent =
       ultimoNumero + " " + ultimoOperador + " " + inputDisplay.value + " =";
@@ -61,11 +80,14 @@ function clickOperadores(operador) {
       valorInputFloat(),
       ultimoNumero
     );
+    
     inputDisplay.value = valorToDisplay();
     clickOperador = false;
     operouIgual = true;
   } else if (clickOperador && operador == ultimoOperador) {
+    
     inputDisplay.value = operar(operador, valorInputFloat(), ultimoNumero);
+    
     inputDisplay.value = valorToDisplay();
     upperDisplay.textContent = inputDisplay.value + " " + operador;
     upperDisplay.textContent.replace(".", ",");
@@ -77,6 +99,10 @@ function clickOperadores(operador) {
     clickOperador &&
     ultimoOperador != null
   ) {
+    console.log("valor do input: "+valorInputFloat())
+    console.log(ultimoOperador)
+    console.log("ultimo numero "+ultimoNumero)
+    
     inputDisplay.value = operar(
       ultimoOperador,
       valorInputFloat(),
@@ -86,9 +112,11 @@ function clickOperadores(operador) {
     zerarDisplay = true;
     clickOperador = false;
     operouIgual = false;
+    
   } else if (!clickOperador) {
     zerarDisplay = true;
     operouIgual = false;
+    porcentagem = true;
   } else {
     ultimoOperador = operador;
     upperDisplay.textContent = inputDisplay.value + " " + operador;
@@ -102,6 +130,9 @@ function clickOperadores(operador) {
     ultimoNumero = parseFloat(inputDisplay.value.replace(",", "."));
     ultimoOperador = operador;
   }
+  globalOperador = operador
+  
+  
 }
 let initial = false;
 
@@ -114,6 +145,7 @@ function clickNumeros(numero) {
     inputDisplay.value = "";
     inputDisplay.value += numero;
     clickOperador = true;
+
     zerarDisplay = false;
   } else if (operouIgual) {
     inputDisplay.value = "";
@@ -131,10 +163,12 @@ function clickApagadores(apagador) {
     case "C":
       inputDisplay.value = "0";
       upperDisplay.textContent = "";
+      numeroParaInversao = null
       clickOperador = false;
       zerarDisplay = false;
       operouIgual = false;
       initial = false;
+      porcentagem = false;
       break;
 
     case "CE":
@@ -143,5 +177,51 @@ function clickApagadores(apagador) {
       break;
     case "DEL":
       inputDisplay.value = inputDisplay.value.slice(0, -1);
+  }
+}
+function clickOperadoresAvancados(operadorAvancado) {
+  // % 1/x x² √x
+
+  switch (operadorAvancado) {
+    case "%":
+      if (porcentagem) {
+        inputDisplay.value = operar(
+          operadorAvancado,
+          ultimoNumero,
+          valorInputFloat()
+        );
+        inputDisplay.value = valorToDisplay();
+        upperDisplay.textContent =
+          ultimoNumero + " " + ultimoOperador + " " + inputDisplay.value;
+        upperDisplay.textContent.replace(".", ",");
+        clickOperador = true;
+      }
+      break;
+    case "1/x":
+      if(initial){
+        numeroParaInversao = valorInputFloat()
+        
+        inputDisplay.value = operar(
+          operadorAvancado,
+          valorInputFloat()
+        );
+        inputDisplay.value = valorToDisplay();
+        
+        if(ultimoNumero){
+          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} 1/(${numeroParaInversao})`
+          
+          clickOperador = true;
+        }else{
+          upperDisplay.textContent = `1/(${inputDisplay.value})`
+        }
+        
+        upperDisplay.textContent.replace(".", ",");
+
+      }
+      break;
+    case "x²":
+      // falta so 2 aleluia
+      break;
+
   }
 }

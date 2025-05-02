@@ -48,16 +48,19 @@ section {
   background-color: #323232;
 }
 .teclas .operadores,
-.teclas .apagadores {
+.teclas .apagadores,
+.teclas .operadores-avancado {
   background-color: #323232;
 }
 .teclas .operadores:hover,
-.teclas .apagadores:hover {
+.teclas .apagadores:hover,
+.teclas .operadores-avancado:hover {
   background-color: #3b3b3b;
 }
 .teclas .operadores:active,
 .teclas .numeros:active,
-.teclas .apagadores:active {
+.teclas .apagadores:active,
+.teclas .operadores-avancado:active {
   background-color: #282828;
 }
 #igual {
