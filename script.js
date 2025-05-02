@@ -36,7 +36,7 @@ Array.from(operadoresAvancados).forEach((valor) => {
 let ultimoNumero = null;
 let ultimoOperador = null;
 let numeroParaInversao = null;
-let globalOperador = ""
+let globalOperador = "";
 let clickOperador = false;
 let zerarDisplay = false;
 let operouIgual = false;
@@ -63,14 +63,20 @@ function operar(op, a, b) {
     case "%":
       return (a * b) / 100;
     case "1/x":
-      return 1/a
+      return 1 / a;
     case "x²":
-      return a**2
+      return a ** 2;
+    case "√x":
+      return a ** (1 / 2);
+    case "+/-":
+      if (a > 0) {
+        return -a;
+      } else return a * -1;
   }
 }
-
+console.log(operar("+/-", 100));
 function clickOperadores(operador) {
-  console.log(operador)
+  console.log(operador);
   if (operador == "=" && ultimoNumero) {
     upperDisplay.textContent =
       ultimoNumero + " " + ultimoOperador + " " + inputDisplay.value + " =";
@@ -80,14 +86,13 @@ function clickOperadores(operador) {
       valorInputFloat(),
       ultimoNumero
     );
-    
+
     inputDisplay.value = valorToDisplay();
     clickOperador = false;
     operouIgual = true;
   } else if (clickOperador && operador == ultimoOperador) {
-    
     inputDisplay.value = operar(operador, valorInputFloat(), ultimoNumero);
-    
+
     inputDisplay.value = valorToDisplay();
     upperDisplay.textContent = inputDisplay.value + " " + operador;
     upperDisplay.textContent.replace(".", ",");
@@ -99,10 +104,10 @@ function clickOperadores(operador) {
     clickOperador &&
     ultimoOperador != null
   ) {
-    console.log("valor do input: "+valorInputFloat())
-    console.log(ultimoOperador)
-    console.log("ultimo numero "+ultimoNumero)
-    
+    console.log("valor do input: " + valorInputFloat());
+    console.log(ultimoOperador);
+    console.log("ultimo numero " + ultimoNumero);
+
     inputDisplay.value = operar(
       ultimoOperador,
       valorInputFloat(),
@@ -112,7 +117,6 @@ function clickOperadores(operador) {
     zerarDisplay = true;
     clickOperador = false;
     operouIgual = false;
-    
   } else if (!clickOperador) {
     zerarDisplay = true;
     operouIgual = false;
@@ -130,9 +134,7 @@ function clickOperadores(operador) {
     ultimoNumero = parseFloat(inputDisplay.value.replace(",", "."));
     ultimoOperador = operador;
   }
-  globalOperador = operador
-  
-  
+  globalOperador = operador;
 }
 let initial = false;
 
@@ -163,7 +165,7 @@ function clickApagadores(apagador) {
     case "C":
       inputDisplay.value = "0";
       upperDisplay.textContent = "";
-      numeroParaInversao = null
+      numeroParaInversao = null;
       clickOperador = false;
       zerarDisplay = false;
       operouIgual = false;
@@ -198,30 +200,64 @@ function clickOperadoresAvancados(operadorAvancado) {
       }
       break;
     case "1/x":
-      if(initial){
-        numeroParaInversao = valorInputFloat()
-        
-        inputDisplay.value = operar(
-          operadorAvancado,
-          valorInputFloat()
-        );
-        inputDisplay.value = valorToDisplay();
-        
-        if(ultimoNumero){
-          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} 1/(${numeroParaInversao})`
-          
-          clickOperador = true;
-        }else{
-          upperDisplay.textContent = `1/(${inputDisplay.value})`
-        }
-        
-        upperDisplay.textContent.replace(".", ",");
+      if (initial) {
+        numeroParaInversao = valorInputFloat();
 
+        inputDisplay.value = operar(operadorAvancado, valorInputFloat());
+        inputDisplay.value = valorToDisplay();
+
+        if (ultimoNumero && !operouIgual) {
+          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} 1/(${numeroParaInversao})`;
+
+          clickOperador = true;
+          operouIgual = true;
+        } else {
+          upperDisplay.textContent = `1/(${inputDisplay.value})`;
+        }
+
+        upperDisplay.textContent.replace(".", ",");
       }
       break;
     case "x²":
-      // falta so 2 aleluia
-      break;
+      if (initial) {
+        numeroParaInversao = valorInputFloat();
 
+        inputDisplay.value = operar(operadorAvancado, valorInputFloat());
+        inputDisplay.value = valorToDisplay();
+
+        if (ultimoNumero && !operouIgual) {
+          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} sqr(${numeroParaInversao})`;
+
+          clickOperador = true;
+        } else {
+          upperDisplay.textContent = `sqr(${inputDisplay.value})`;
+        }
+
+        upperDisplay.textContent.replace(".", ",");
+      }
+      break;
+    case "√x":
+      if (initial) {
+        numeroParaInversao = valorInputFloat();
+
+        inputDisplay.value = operar(operadorAvancado, valorInputFloat());
+        inputDisplay.value = valorToDisplay();
+
+        if (ultimoNumero && !operouIgual) {
+          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} √(${numeroParaInversao})`;
+
+          clickOperador = true;
+        } else {
+          upperDisplay.textContent = `√(${inputDisplay.value})`;
+        }
+
+        upperDisplay.textContent.replace(".", ",");
+      }
+      break;
+    case "+/-":
+      if (initial) {
+        inputDisplay.value = operar(operadorAvancado, valorInputFloat());
+        inputDisplay.value = valorToDisplay();
+      }
   }
 }

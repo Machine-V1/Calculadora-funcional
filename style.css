@@ -41,10 +41,10 @@ section {
   border: none;
   cursor: pointer;
 }
-.teclas .numeros {
+.teclas .numeros,#mais-menos {
   background-color: #3b3b3b;
 }
-.teclas .numeros:hover {
+.teclas .numeros:hover ,#mais-menos:hover{
   background-color: #323232;
 }
 .teclas .operadores,
@@ -60,7 +60,7 @@ section {
 .teclas .operadores:active,
 .teclas .numeros:active,
 .teclas .apagadores:active,
-.teclas .operadores-avancado:active {
+.teclas .operadores-avancado:active,#mais-menos:active{
   background-color: #282828;
 }
 #igual {
