@@ -41,8 +41,9 @@ let clickOperador = false;
 let zerarDisplay = false;
 let operouIgual = false;
 let porcentagem = false;
-
-//
+let initial = false;
+// todas as variaveis sao para controle de estado.
+// se um numero e digitado apos o clique nos operadores por exemplo
 
 function valorInputFloat() {
   return parseFloat(inputDisplay.value.replace(",", "."));
@@ -74,9 +75,8 @@ function operar(op, a, b) {
       } else return a * -1;
   }
 }
-console.log(operar("+/-", 100));
+
 function clickOperadores(operador) {
-  console.log(operador);
   if (operador == "=" && ultimoNumero) {
     upperDisplay.textContent =
       ultimoNumero + " " + ultimoOperador + " " + inputDisplay.value + " =";
@@ -104,9 +104,7 @@ function clickOperadores(operador) {
     clickOperador &&
     ultimoOperador != null
   ) {
-    console.log("valor do input: " + valorInputFloat());
-    console.log(ultimoOperador);
-    console.log("ultimo numero " + ultimoNumero);
+    
 
     inputDisplay.value = operar(
       ultimoOperador,
@@ -136,7 +134,7 @@ function clickOperadores(operador) {
   }
   globalOperador = operador;
 }
-let initial = false;
+
 
 function clickNumeros(numero) {
   if (!initial) {
@@ -182,7 +180,7 @@ function clickApagadores(apagador) {
   }
 }
 function clickOperadoresAvancados(operadorAvancado) {
-  // TASK: Modular esse codigo abaixo
+  
 
   switch (operadorAvancado) {
     case "%":
@@ -201,57 +199,17 @@ function clickOperadoresAvancados(operadorAvancado) {
       break;
     case "1/x":
       if (initial) {
-        numeroParaInversao = valorInputFloat();
-
-        inputDisplay.value = operar(operadorAvancado, valorInputFloat());
-        inputDisplay.value = valorToDisplay();
-
-        if (ultimoNumero && !operouIgual) {
-          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} 1/(${numeroParaInversao})`;
-
-          clickOperador = true;
-          operouIgual = true;
-        } else {
-          upperDisplay.textContent = `1/(${inputDisplay.value})`;
-        }
-
-        upperDisplay.textContent.replace(".", ",");
+        operarAvancado(operadorAvancado,"1/x");
       }
       break;
     case "x²":
       if (initial) {
-        numeroParaInversao = valorInputFloat();
-
-        inputDisplay.value = operar(operadorAvancado, valorInputFloat());
-        inputDisplay.value = valorToDisplay();
-
-        if (ultimoNumero && !operouIgual) {
-          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} sqr(${numeroParaInversao})`;
-
-          clickOperador = true;
-        } else {
-          upperDisplay.textContent = `sqr(${inputDisplay.value})`;
-        }
-
-        upperDisplay.textContent.replace(".", ",");
+        operarAvancado(operadorAvancado,"x²");
       }
       break;
     case "√x":
       if (initial) {
-        numeroParaInversao = valorInputFloat();
-
-        inputDisplay.value = operar(operadorAvancado, valorInputFloat());
-        inputDisplay.value = valorToDisplay();
-
-        if (ultimoNumero && !operouIgual) {
-          upperDisplay.textContent = `${ultimoNumero} ${globalOperador} √(${numeroParaInversao})`;
-
-          clickOperador = true;
-        } else {
-          upperDisplay.textContent = `√(${inputDisplay.value})`;
-        }
-
-        upperDisplay.textContent.replace(".", ",");
+        operarAvancado(operadorAvancado,"√x");
       }
       break;
     case "+/-":
@@ -260,4 +218,21 @@ function clickOperadoresAvancados(operadorAvancado) {
         inputDisplay.value = valorToDisplay();
       }
   }
+  
+}
+function operarAvancado(operadorAvancado, symbol) {
+  numeroParaInversao = valorInputFloat();
+
+  inputDisplay.value = operar(operadorAvancado, valorInputFloat());
+  inputDisplay.value = valorToDisplay();
+
+  if (ultimoNumero && !operouIgual) {
+    upperDisplay.textContent = `${ultimoNumero} ${globalOperador} ${symbol}(${numeroParaInversao})`;
+
+    clickOperador = true;
+  } else {
+    upperDisplay.textContent = `√(${inputDisplay.value})`;
+  }
+
+  upperDisplay.textContent = upperDisplay.textContent.replace(".", ",");
 }
